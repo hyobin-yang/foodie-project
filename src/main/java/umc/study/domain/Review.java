@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import umc.study.domain.common.BaseEntity;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -33,5 +35,5 @@ public class Review extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
-    private ReviewImage reviewImage;
+    private List<ReviewImage> reviewImage;
 }
