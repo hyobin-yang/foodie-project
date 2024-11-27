@@ -26,10 +26,16 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 20)
     private String name;
 
+    @Column(nullable = false)
+    private Integer age;
+
+    @Column(nullable = false, length = 45)
     private String address;
 
+    @Column(nullable = false, length = 45)
     private String specAddress;
 
     @Enumerated(EnumType.STRING)
@@ -37,6 +43,7 @@ public class Member extends BaseEntity {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)")
     private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
@@ -45,7 +52,7 @@ public class Member extends BaseEntity {
 
     private LocalDate inactiveDate;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 45)
     private String email;
 
     private Integer point;
