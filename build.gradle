@@ -1,9 +1,8 @@
 plugins {
 	id 'java'
-	//id 'org.springframework.boot' version '3.3.5'
-	id 'org.springframework.boot' version '3.2.2'
+	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	//id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'UMC'
@@ -15,113 +14,65 @@ java {
 	}
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.hibernate.orm:hibernate-core:6.0.2.Final'
-//	//implementation 'mysql:mysql-connector-java:8.0.33'
-//	implementation 'mysql:mysql-connector-java:8.0.33'
-//
-//	// queryDSL
-//	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-//	//annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-//	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-//
-//	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
-//	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
-//	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
-//
-//
-//	//runtimeOnly 'com.mysql:mysql-connector-j'
-//	//runtimeOnly 'com.mysql:mysql-connector-java:8.0.33'
-//
-//	compileOnly 'org.projectlombok:lombok:1.18.22'
-//	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-//
-//	//implementation 'org.hibernate:hibernate-core:5.6.9.Final'
-//
-//	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-//	implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.9'
-//
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//
-//	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//
-////
-////	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-////	implementation 'org.hibernate.orm:hibernate-core:6.0.2.Final'
-
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.hibernate.orm:hibernate-core:6.0.2.Final'  // Hibernate 6.0.2 이상
-	implementation 'mysql:mysql-connector-java:8.0.33'  // MySQL 드라이버 추가
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// queryDSL
+	// QueryDSL 설정
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
 
+	// P6Spy
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
-	// 자바 21 -> lombok 최소 버전 1.18.30
-	compileOnly 'org.projectlombok:lombok:1.18.30'
-	annotationProcessor 'org.projectlombok:lombok:1.18.30'
-	implementation 'org.hibernate:hibernate-core:6.0.2.Final'
+	// swagger 세팅
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-	implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.9'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-
-}
-
-sourceSets {
-	main {
-		java {
-			srcDirs = ['src/main/java', 'src/main/resources']
-		}
-	}
+	//validation 세팅
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-
 // Querydsl 설정부
-def generated = 'src/main/generated'
+def querydslDir = "src/main/generated"
 
+sourceSets {
+	main.java.srcDirs += [querydslDir]
+}
+
+tasks.withType(JavaCompile) {
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
 
 clean {
-	delete file('src/main/generated')
-}
-
-querydsl {
-	jpa = true
-	querydslSourcesDir = generated
-}
-sourceSets {
-	main.java.srcDir generated
-}
-
-compileQuerydsl{
-	options.annotationProcessorPath = configurations.querydsl
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
+	delete file(querydslDir)
 }
 

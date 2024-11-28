@@ -1,5 +1,7 @@
 package umc.study.domain.mapping;
 
+import umc.study.domain.Member;
+import umc.study.domain.Mission;
 import umc.study.domain.enums.MissionStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,5 +19,13 @@ public class MemberMission {
 
     @Enumerated(EnumType.STRING)
     private MissionStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_id")
+    private Mission mission;
 
 }
