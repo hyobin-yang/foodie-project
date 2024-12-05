@@ -9,6 +9,7 @@ import umc.study.domain.Member;
 import umc.study.service.memberService.MemberCommandService;
 import umc.study.web.dto.MemberRequestDTO;
 import umc.study.web.dto.MemberResponseDTO;
+import umc.study.web.dto.StoreResponseDTO;
 
 @RestController
 @RequestMapping("/members")

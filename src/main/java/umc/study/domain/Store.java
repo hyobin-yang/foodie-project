@@ -24,7 +24,7 @@ public class Store extends BaseEntity {
     @Column(nullable = false, length = 45)
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0.0")
     private Float score;
 
     @ManyToOne(fetch = FetchType.LAZY)
