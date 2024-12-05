@@ -32,5 +32,15 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .where(predicate)
                 .fetch();
     }
+
+    public boolean storeIsExist(Long id){
+        Long count = jpaQueryFactory
+                .select(store.count())
+                .from(store)
+                .where(store.id.eq(id))
+                .fetchOne();
+
+        return count != null && count > 0;
+    }
 }
 

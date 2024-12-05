@@ -1,4 +1,4 @@
-package umc.study.service;
+package umc.study.service.StoreService;
 
 
 import org.springframework.data.domain.Page;
@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.study.apiPayload.code.status.ErrorStatus;
+import umc.study.apiPayload.exception.handler.StoreErrorHandler;
 import umc.study.domain.Review;
 import umc.study.domain.Store;
 import umc.study.repository.reviewRepository.ReviewRepository;
@@ -17,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class StoreQueryServiceImpl implements StoreQueryService{
+public class StoreCommandServiceImpl implements StoreCommandService {
 
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
@@ -35,11 +37,17 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public Page<Review> getReviewList(Long StoreId, Integer page){
-        Store store = storeRepository.findById(StoreId).get();
-
+    public Page<Review> getReviewPage(Long storeId, Integer page){
+        Store store = storeRepository.findById(storeId).get();
         Page<Review> StorePage = reviewRepository.findAllByStore(store, PageRequest.of(page, 10));
         return StorePage;
+    }
+
+    @Override
+    public void validateStoreExistence(Long id){
+        if (!storeRepository.existsById(id)){
+            throw new StoreErrorHandler(ErrorStatus.STORE_NOT_FOUND);
+        }
     }
 
 }
